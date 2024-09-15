@@ -5,8 +5,10 @@ const fruits = [];
 
 let GAME_WIDTH = 800;
 let GAME_HEIGHT = 600;
-let FRUIT_SIZE = 50;
+let BASE_FRUIT_SIZE = 40;
 const COLLISION_THRESHOLD = 5; // Minimum velocity for fruits to bounce instead of stack
+const FLOOR_HEIGHT_RATIO = 0.95; // Set the floor at 95% of the game container height
+const SIZE_INCREASE_RATIO = 1.25; // Each fruit level is 25% bigger than the previous
 
 let nextFruitType = getRandomFruitType();
 
@@ -17,16 +19,20 @@ function getRandomFruitType() {
 function updateNextFruitDisplay() {
     const nextFruitElement = document.getElementById('next-fruit');
     nextFruitElement.className = `fruit ${nextFruitType}`;
+    nextFruitElement.style.width = `${BASE_FRUIT_SIZE}px`;
+    nextFruitElement.style.height = `${BASE_FRUIT_SIZE}px`;
 }
 
 function populateLegend() {
     const legendItems = document.getElementById('legend-items');
-    fruitTypes.forEach(fruitType => {
+    fruitTypes.forEach((fruitType, index) => {
         const item = document.createElement('div');
         item.className = 'legend-item';
         
         const fruitIcon = document.createElement('div');
         fruitIcon.className = `legend-fruit ${fruitType}`;
+        fruitIcon.style.width = `${BASE_FRUIT_SIZE * 0.5}px`;
+        fruitIcon.style.height = `${BASE_FRUIT_SIZE * 0.5}px`;
         
         const fruitName = document.createElement('span');
         fruitName.textContent = fruitType.charAt(0).toUpperCase() + fruitType.slice(1);
@@ -46,15 +52,18 @@ class Fruit {
         this.vy = 0; // Vertical velocity
         this.gravity = 0.5; // Gravity acceleration
         this.rotation = 0; // Initial rotation
+        this.size = BASE_FRUIT_SIZE * Math.pow(SIZE_INCREASE_RATIO, fruitTypes.indexOf(type));
         this.element = document.createElement('div');
         this.element.className = `fruit ${type}`;
+        this.element.style.width = `${this.size}px`;
+        this.element.style.height = `${this.size}px`;
         this.updatePosition();
         document.getElementById('game-container').appendChild(this.element);
     }
 
     updatePosition() {
-        this.element.style.left = `${(this.x / GAME_WIDTH) * 100}%`;
-        this.element.style.top = `${(this.y / GAME_HEIGHT) * 100}%`;
+        this.element.style.left = `${this.x}px`;
+        this.element.style.top = `${this.y}px`;
         this.element.style.transform = `rotate(${this.rotation}deg)`;
     }
 
@@ -64,15 +73,15 @@ class Fruit {
         this.y += this.vy;
 
         // Bounce off the floor
-        if (this.y + FRUIT_SIZE > GAME_HEIGHT) {
-            this.y = GAME_HEIGHT - FRUIT_SIZE;
+        if (this.y + this.size > GAME_HEIGHT * FLOOR_HEIGHT_RATIO) {
+            this.y = GAME_HEIGHT * FLOOR_HEIGHT_RATIO - this.size;
             this.vy *= -0.7; // Reverse and reduce speed
         }
 
         // Bounce off the walls
-        if (this.x <= 0 || this.x + FRUIT_SIZE >= GAME_WIDTH) {
+        if (this.x <= 0 || this.x + this.size >= GAME_WIDTH) {
             this.vx *= -1;
-            this.x = Math.max(0, Math.min(this.x, GAME_WIDTH - FRUIT_SIZE));
+            this.x = Math.max(0, Math.min(this.x, GAME_WIDTH - this.size));
         }
 
         // Apply friction
@@ -97,20 +106,25 @@ function updateGameDimensions() {
     const gameContainer = document.getElementById('game-container');
     GAME_WIDTH = gameContainer.clientWidth;
     GAME_HEIGHT = gameContainer.clientHeight;
-    FRUIT_SIZE = Math.min(GAME_WIDTH, GAME_HEIGHT) * 0.075; // Adjust fruit size based on game dimensions
+    BASE_FRUIT_SIZE = Math.min(GAME_WIDTH, GAME_HEIGHT) * 0.07;
     
-    // Update fruit sizes
-    const fruitElements = document.querySelectorAll('.fruit');
-    fruitElements.forEach(fruit => {
-        fruit.style.width = `${FRUIT_SIZE}px`;
-        fruit.style.height = `${FRUIT_SIZE}px`;
+    // Update fruit sizes and positions
+    fruits.forEach(fruit => {
+        fruit.size = BASE_FRUIT_SIZE * Math.pow(SIZE_INCREASE_RATIO, fruitTypes.indexOf(fruit.type));
+        fruit.element.style.width = `${fruit.size}px`;
+        fruit.element.style.height = `${fruit.size}px`;
+        fruit.x = Math.min(fruit.x, GAME_WIDTH - fruit.size);
+        fruit.y = Math.min(fruit.y, GAME_HEIGHT * FLOOR_HEIGHT_RATIO - fruit.size);
+        fruit.updatePosition();
     });
+
+    updateNextFruitDisplay();
 }
 
 function onGameContainerClick(event) {
     const gameContainer = document.getElementById('game-container');
     const rect = gameContainer.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * GAME_WIDTH;
+    const x = event.clientX - rect.left - BASE_FRUIT_SIZE / 2;
     const y = 0; // Start at the top
 
     const fruit = new Fruit(nextFruitType, x, y);
@@ -139,17 +153,18 @@ function checkCollisions() {
 }
 
 function areColliding(fruitA, fruitB) {
-    const dx = fruitA.x - fruitB.x;
-    const dy = fruitA.y - fruitB.y;
+    const dx = (fruitA.x + fruitA.size / 2) - (fruitB.x + fruitB.size / 2);
+    const dy = (fruitA.y + fruitA.size / 2) - (fruitB.y + fruitB.size / 2);
     const distance = Math.sqrt(dx * dx + dy * dy);
-    return distance < FRUIT_SIZE;
+    return distance < (fruitA.size + fruitB.size) / 2;
 }
 
 function handleCollision(fruitA, fruitB) {
-    const dx = fruitB.x - fruitA.x;
-    const dy = fruitB.y - fruitA.y;
+    const dx = (fruitB.x + fruitB.size / 2) - (fruitA.x + fruitA.size / 2);
+    const dy = (fruitB.y + fruitB.size / 2) - (fruitA.y + fruitA.size / 2);
     const distance = Math.sqrt(dx * dx + dy * dy);
-    const overlap = FRUIT_SIZE - distance;
+    const minDistance = (fruitA.size + fruitB.size) / 2;
+    const overlap = minDistance - distance;
 
     // Calculate relative velocity
     const relativeVelocityX = fruitB.vx - fruitA.vx;
@@ -161,12 +176,12 @@ function handleCollision(fruitA, fruitB) {
         const nx = dx / distance;
         const ny = dy / distance;
 
-        const p = 2 * (fruitA.vx * nx + fruitA.vy * ny - fruitB.vx * nx - fruitB.vy * ny) / 2; // Assuming equal mass
+        const p = 2 * (fruitA.vx * nx + fruitA.vy * ny - fruitB.vx * nx - fruitB.vy * ny) / (fruitA.size + fruitB.size);
 
-        fruitA.vx = fruitA.vx - p * nx;
-        fruitA.vy = fruitA.vy - p * ny;
-        fruitB.vx = fruitB.vx + p * nx;
-        fruitB.vy = fruitB.vy + p * ny;
+        fruitA.vx = fruitA.vx - p * fruitB.size * nx;
+        fruitA.vy = fruitA.vy - p * fruitB.size * ny;
+        fruitB.vx = fruitB.vx + p * fruitA.size * nx;
+        fruitB.vy = fruitB.vy + p * fruitA.size * ny;
     } else {
         // Stack on top of each other
         const moveX = (overlap / 2) * (dx / distance);
