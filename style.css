@@ -65,8 +65,7 @@ body {
 #game-container {
     width: 100%;
     max-width: 800px;
-    height: 0;
-    padding-bottom: 75%; /* 4:3 aspect ratio */
+    aspect-ratio: 4 / 3;
     background-color: #fff;
     border: 2px solid #333;
     position: relative;
@@ -114,8 +113,8 @@ body {
 }
 
 .fruit {
-    width: 40px;
-    height: 40px;
+    width: 7vmin;
+    height: 7vmin;
     border-radius: 50%;
     position: absolute;
     background-size: contain;
@@ -141,7 +140,6 @@ body {
     #game-container {
         width: 600px;
         height: 450px;
-        padding-bottom: 0;
     }
 
     #legend {
@@ -153,6 +151,11 @@ body {
     #legend-items {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .fruit {
+        width: 40px;
+        height: 40px;
     }
 }
 
