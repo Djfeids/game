@@ -141,7 +141,7 @@ function checkCollisions() {
             const fruitB = fruits[j];
 
             if (areColliding(fruitA, fruitB)) {
-                if (fruitA.type === fruitB.type) {
+                if (fruitA.type === fruitB.type && fruitA.type !== fruitTypes[fruitTypes.length - 1]) {
                     mergeFruits(fruitA, fruitB);
                     return; // Exit after merging to avoid array issues
                 } else {
