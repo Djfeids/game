@@ -161,3 +161,20 @@ body {
     margin: 20px;
     text-align: center;
 }
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: red;
+    font-size: 48px; /* Large but not too big */
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: semi-transparent background */
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 10; /* Make sure it appears above other elements */
+    text-align: center;
+    width: 80%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Optional: Add some shadow */
+}

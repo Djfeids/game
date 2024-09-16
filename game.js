@@ -2,6 +2,8 @@
 
 const fruits = [];
 let nextFruitType = getRandomFruitType();
+let lastFrameTime = 0;
+let isGameOver = false;
 
 function initializeGame() {
     updateGameDimensions(
@@ -32,6 +34,8 @@ function handleResize() {
 }
 
 function onGameContainerClick(event) {
+    if (isGameOver) return;
+
     const gameContainer = document.getElementById('game-container');
     const rect = gameContainer.getBoundingClientRect();
     const x = event.clientX - rect.left - BASE_FRUIT_SIZE / 2;
@@ -123,10 +127,30 @@ function mergeFruits(fruitA, fruitB) {
     updateScoreDisplay();
 }
 
-function gameLoop() {
-    fruits.forEach(fruit => fruit.applyPhysics());
+function gameLoop(currentTime) {
+    if (isGameOver) return;
+
+    const deltaTime = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
+
+    fruits.forEach(fruit => {
+        fruit.applyPhysics(deltaTime);
+        if (fruit.isGameOver()) {
+            handleGameOver();
+            return;
+        }
+    });
+
     checkCollisions();
     requestAnimationFrame(gameLoop);
+}
+
+function handleGameOver() {
+    isGameOver = true;
+    const gameOverElement = document.createElement('div');
+    gameOverElement.id = 'game-over';
+    gameOverElement.textContent = 'Game Over!';
+    document.getElementById('game-container').appendChild(gameOverElement);
 }
 
 // Initialize the game
@@ -137,4 +161,5 @@ const gameContainer = document.getElementById('game-container');
 gameContainer.addEventListener('click', onGameContainerClick);
 
 // Start the game loop
-gameLoop();
+lastFrameTime = performance.now();
+requestAnimationFrame(gameLoop);

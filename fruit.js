@@ -14,6 +14,7 @@ class Fruit {
         this.element.className = `fruit ${type}`;
         this.element.style.width = `${this.size}px`;
         this.element.style.height = `${this.size}px`;
+        this.timeAboveBoard = 0; // New property to track time above board
         this.updatePosition();
         document.getElementById('game-container').appendChild(this.element);
     }
@@ -24,10 +25,21 @@ class Fruit {
         this.element.style.transform = `rotate(${this.rotation}deg)`;
     }
 
-    applyPhysics() {
+    isAboveBoard() {
+        return this.y < 0;
+    }
+
+    applyPhysics(deltaTime) {
         this.vy += this.gravity; // Apply gravity
         this.x += this.vx;
         this.y += this.vy;
+
+        // Check if fruit is above the board
+        if (this.isAboveBoard()) {
+            this.timeAboveBoard += deltaTime;
+        } else {
+            this.timeAboveBoard = 0;
+        }
 
         // Bounce off the floor
         if (this.y + this.size > GAME_HEIGHT * FLOOR_HEIGHT_RATIO) {
@@ -49,5 +61,9 @@ class Fruit {
         this.rotation += this.vx;
 
         this.updatePosition();
+    }
+
+    isGameOver() {
+        return this.timeAboveBoard > 2000; // 2000 milliseconds = 2 seconds
     }
 }
