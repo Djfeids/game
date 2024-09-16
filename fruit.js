@@ -32,7 +32,7 @@ class Fruit {
 
     applyPhysics(deltaTime) {
         // Apply gravity (weight affects acceleration)
-        this.vy += this.gravity * this.weight;
+        this.vy += this.gravity;// * this.weight;
         
         this.x += this.vx;
         this.y += this.vy;
@@ -58,7 +58,7 @@ class Fruit {
 
         // Apply friction (weight affects friction)
         this.vx *= 0.99 / this.weight;
-        this.vy *= 0.99 / this.weight;
+        // this.vy *= 0.99 / this.weight;
 
         // Rotate the fruit (weight affects rotation speed)
         this.rotation += this.vx / this.weight;
