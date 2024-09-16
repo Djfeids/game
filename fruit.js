@@ -10,6 +10,7 @@ class Fruit {
         this.gravity = 0.5; // Gravity acceleration
         this.rotation = 0; // Initial rotation
         this.size = BASE_FRUIT_SIZE * Math.pow(SIZE_INCREASE_RATIO, fruitTypes.indexOf(type));
+        this.weight = BASE_FRUIT_WEIGHT * Math.pow(WEIGHT_INCREASE_RATIO, fruitTypes.indexOf(type));
         this.element = document.createElement('div');
         this.element.className = `fruit ${type}`;
         this.element.style.width = `${this.size}px`;
@@ -30,7 +31,9 @@ class Fruit {
     }
 
     applyPhysics(deltaTime) {
-        this.vy += this.gravity; // Apply gravity
+        // Apply gravity (weight affects acceleration)
+        this.vy += this.gravity * this.weight;
+        
         this.x += this.vx;
         this.y += this.vy;
 
@@ -41,24 +44,24 @@ class Fruit {
             this.timeAboveBoard = 0;
         }
 
-        // Bounce off the floor
+        // Bounce off the floor (weight affects bounce height)
         if (this.y + this.size > GAME_HEIGHT * FLOOR_HEIGHT_RATIO) {
             this.y = GAME_HEIGHT * FLOOR_HEIGHT_RATIO - this.size;
-            this.vy *= -0.7; // Reverse and reduce speed
+            this.vy *= -0.7 / this.weight; // Heavier fruits bounce less
         }
 
-        // Bounce off the walls
+        // Bounce off the walls (weight affects horizontal movement)
         if (this.x <= 0 || this.x + this.size >= GAME_WIDTH) {
-            this.vx *= -1;
+            this.vx *= -1 / this.weight; // Heavier fruits bounce less horizontally
             this.x = Math.max(0, Math.min(this.x, GAME_WIDTH - this.size));
         }
 
-        // Apply friction
-        this.vx *= 0.99;
-        this.vy *= 0.99;
+        // Apply friction (weight affects friction)
+        this.vx *= 0.99 / this.weight;
+        this.vy *= 0.99 / this.weight;
 
-        // Rotate the fruit
-        this.rotation += this.vx;
+        // Rotate the fruit (weight affects rotation speed)
+        this.rotation += this.vx / this.weight;
 
         this.updatePosition();
     }

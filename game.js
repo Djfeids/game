@@ -21,11 +21,11 @@ function handleResize() {
     
     // Update fruit sizes and positions
     fruits.forEach(fruit => {
-        fruit.size = BASE_FRUIT_SIZE * Math.pow(1.25, fruitTypes.indexOf(fruit.type));
+        fruit.size = BASE_FRUIT_SIZE * Math.pow(SIZE_INCREASE_RATIO, fruitTypes.indexOf(fruit.type));
         fruit.element.style.width = `${fruit.size}px`;
         fruit.element.style.height = `${fruit.size}px`;
         fruit.x = Math.min(fruit.x, GAME_WIDTH - fruit.size);
-        fruit.y = Math.min(fruit.y, GAME_HEIGHT * 0.95 - fruit.size);
+        fruit.y = Math.min(fruit.y, GAME_HEIGHT * FLOOR_HEIGHT_RATIO - fruit.size);
         fruit.updatePosition();
     });
 
@@ -79,31 +79,35 @@ function handleCollision(fruitA, fruitB) {
     const speed = Math.sqrt(relativeVelocityX * relativeVelocityX + relativeVelocityY * relativeVelocityY);
 
     if (speed > COLLISION_THRESHOLD) {
-        // Bounce off each other
+        // Bounce off each other, considering weights
         const nx = dx / distance;
         const ny = dy / distance;
 
-        const p = 2 * (fruitA.vx * nx + fruitA.vy * ny - fruitB.vx * nx - fruitB.vy * ny) / (fruitA.size + fruitB.size);
+        const totalWeight = fruitA.weight + fruitB.weight;
+        const p = 2 * (fruitA.vx * nx + fruitA.vy * ny - fruitB.vx * nx - fruitB.vy * ny) / totalWeight;
 
-        fruitA.vx = fruitA.vx - p * fruitB.size * nx;
-        fruitA.vy = fruitA.vy - p * fruitB.size * ny;
-        fruitB.vx = fruitB.vx + p * fruitA.size * nx;
-        fruitB.vy = fruitB.vy + p * fruitA.size * ny;
+        fruitA.vx = fruitA.vx - p * fruitB.weight * nx;
+        fruitA.vy = fruitA.vy - p * fruitB.weight * ny;
+        fruitB.vx = fruitB.vx + p * fruitA.weight * nx;
+        fruitB.vy = fruitB.vy + p * fruitA.weight * ny;
     } else {
-        // Stack on top of each other
-        const moveX = (overlap / 2) * (dx / distance);
-        const moveY = (overlap / 2) * (dy / distance);
+        // Stack on top of each other, considering weights
+        const totalWeight = fruitA.weight + fruitB.weight;
+        const moveX = (overlap / totalWeight) * (dx / distance);
+        const moveY = (overlap / totalWeight) * (dy / distance);
 
-        fruitA.x -= moveX;
-        fruitA.y -= moveY;
-        fruitB.x += moveX;
-        fruitB.y += moveY;
+        fruitA.x -= moveX * fruitB.weight;
+        fruitA.y -= moveY * fruitB.weight;
+        fruitB.x += moveX * fruitA.weight;
+        fruitB.y += moveY * fruitA.weight;
 
-        // Adjust velocities
-        fruitA.vx = (fruitA.vx + fruitB.vx) / 2;
-        fruitA.vy = (fruitA.vy + fruitB.vy) / 2;
-        fruitB.vx = fruitA.vx;
-        fruitB.vy = fruitA.vy;
+        // Adjust velocities based on weights
+        const newVx = (fruitA.vx * fruitA.weight + fruitB.vx * fruitB.weight) / totalWeight;
+        const newVy = (fruitA.vy * fruitA.weight + fruitB.vy * fruitB.weight) / totalWeight;
+        fruitA.vx = newVx;
+        fruitA.vy = newVy;
+        fruitB.vx = newVx;
+        fruitB.vy = newVy;
     }
 }
 
@@ -119,6 +123,12 @@ function mergeFruits(fruitA, fruitB) {
     const newX = (fruitA.x + fruitB.x) / 2;
     const newY = (fruitA.y + fruitB.y) / 2;
     const newFruit = new Fruit(newType, newX, newY);
+
+    // Adjust velocity based on the merged fruits' weights and velocities
+    const totalWeight = fruitA.weight + fruitB.weight;
+    newFruit.vx = (fruitA.vx * fruitA.weight + fruitB.vx * fruitB.weight) / totalWeight;
+    newFruit.vy = (fruitA.vy * fruitA.weight + fruitB.vy * fruitB.weight) / totalWeight;
+
     fruits.push(newFruit);
 
     // Update score based on the type of the new fruit
