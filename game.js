@@ -116,6 +116,11 @@ function mergeFruits(fruitA, fruitB) {
     const newY = (fruitA.y + fruitB.y) / 2;
     const newFruit = new Fruit(newType, newX, newY);
     fruits.push(newFruit);
+
+    // Update score based on the type of the new fruit
+    const points = fruitTypes.indexOf(newType) + 1;
+    score += points * 10;
+    updateScoreDisplay();
 }
 
 function gameLoop() {

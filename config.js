@@ -1,6 +1,7 @@
 // config.js
 
 const fruitTypes = ['cherry', 'strawberry', 'grape', 'orange', 'apple', 'pear', 'pineapple'];
+let score = 0;
 let GAME_WIDTH = 800;
 let GAME_HEIGHT = 600;
 let BASE_FRUIT_SIZE = 40;

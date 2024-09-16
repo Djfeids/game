@@ -154,3 +154,10 @@ body {
         height: 600px;
     }
 }
+
+#score-container {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px;
+    text-align: center;
+}

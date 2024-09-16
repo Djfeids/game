@@ -43,3 +43,8 @@ function areColliding(fruitA, fruitB) {
     const distance = Math.sqrt(dx * dx + dy * dy);
     return distance < (fruitA.size + fruitB.size) / 2;
 }
+
+function updateScoreDisplay() {
+    const scoreElement = document.getElementById('score');
+    scoreElement.textContent = `Score: ${score}`;
+}
