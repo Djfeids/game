@@ -8,6 +8,7 @@
 </head>
 <body>
     <div id="game-wrapper">
+        <!-- Conteneur pour le prochain fruit -->
         <div id="next-fruit-container">
             <p id="next-fruit-text">Next Fruit:</p>
             <div id="next-fruit-wrapper">
@@ -17,16 +18,22 @@
                 <span id="score">Score: 0</span>
             </div>
         </div>
+
+        <!-- Conteneur pour le jeu et la légende -->
         <div id="game-and-legend">
             <div id="game-container"></div>
+
+            <!-- Section de la légende des fruits -->
             <div id="legend">
                 <h2>Fruit Legend</h2>
                 <div id="legend-items"></div>
             </div>
         </div>
     </div>
+
     <script src="config.js"></script>
     <script src="fruit.js"></script>
     <script src="utils.js"></script>
-    <script src="game.js"></script></body>
+    <script src="game.js"></script>
+</body>
 </html>

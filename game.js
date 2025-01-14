@@ -133,7 +133,7 @@ function mergeFruits(fruitA, fruitB) {
 
     // Update score based on the type of the new fruit
     const points = fruitTypes.indexOf(newType) + 1;
-    score += points * 10;
+    score += points * 2;
     updateScoreDisplay();
 }
 

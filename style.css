@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
+    background-color: #cbad6b;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,26 +22,26 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 10px;
-    background-color: #ffffff;
-    padding: 10px;
+    margin-bottom: 5px; /* Réduit l'espace sous la zone */
+    background-color: #e8d3a5;
+    padding: 5px; /* Réduit le padding interne */
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #next-fruit-text {
-    margin: 0 0 10px 0;
-    font-size: 16px;
+    margin: 0 0 5px 0; /* Réduit la marge entre le texte et le fruit */
+    font-size: 14px; /* Réduit la taille de la police */
     font-weight: bold;
 }
 
 #next-fruit-wrapper {
-    width: 50px;
-    height: 50px;
+    width: 40px; /* Réduit la largeur */
+    height: 40px; /* Réduit la hauteur */
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: #ab9d7f;
     border-radius: 50%;
 }
 
@@ -54,26 +54,30 @@ body {
 
 #game-and-legend {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
     gap: 10px;
     width: 100%;
+    max-width: 800px;
 }
 
 #game-container {
-    width: 100%;
-    max-width: 800px;
-    aspect-ratio: 4 / 3;
-    background-color: #fff;
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+    min-height: 300px;
+    aspect-ratio: 9 / 16;
+    background-color: #e8d3a5;
     border: 2px solid #333;
     position: relative;
     overflow: hidden;
+    margin: 0 auto;
 }
 
 #legend {
-    width: 100%;
-    max-width: 800px;
-    background-color: #ffffff;
+    width: 150px;
+    height: auto;
+    background-color: #e8d3a5;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -89,15 +93,15 @@ body {
 
 #legend-items {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     gap: 10px;
 }
 
 .legend-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 5px;
     font-size: 12px;
 }
 
@@ -106,6 +110,8 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    width: 40px;
+    height: 40px;
 }
 
 .fruit {
@@ -117,34 +123,51 @@ body {
     transform-origin: center center;
 }
 
+.eggplant { background-image: url('img/eggplant.png'); }
 .cherry { background-image: url('img/cherry.png'); }
-.strawberry { background-image: url('img/strawberry.png'); }
-.grape { background-image: url('img/grape.png'); }
-.orange { background-image: url('img/orange.png'); }
+.lime { background-image: url('img/lime.png'); }
+.banana { background-image: url('img/banana.png'); }
 .apple { background-image: url('img/apple.png'); }
-.pear { background-image: url('img/pear.png'); }
+.peach { background-image: url('img/peach.png'); }
+.coco { background-image: url('img/coco.png'); }
+.melon { background-image: url('img/melon.png'); }
 .pineapple { background-image: url('img/pineapple.png'); }
+.watermelon { background-image: url('img/watermelon.png'); }
 
-@media (min-width: 768px) {
+/* Media query pour les écrans mobiles */
+@media (max-width: 768px) {
+    #game-wrapper {
+        padding: 20px;
+    }
+
     #game-and-legend {
-        flex-direction: row;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
 
     #game-container {
-        width: 600px;
-        height: 450px;
+        width: 90%;
+        max-width: 300px;
+        min-height: 300px;
     }
 
     #legend {
-        width: 150px;
-        height: 450px;
-        overflow-y: auto;
+        width: 100%;
+        max-width: 300px;
+        margin-top: 20px;
     }
 
-    #legend-items {
-        flex-direction: column;
-        align-items: flex-start;
+    #legend h2 {
+        display: none; /* Cache le titre "Fruit Legend" */
+    }
+
+    .legend-item span {
+        display: none; /* Cache les noms des fruits */
+    }
+
+    .legend-fruit {
+        width: 30px;
+        height: 30px;
     }
 }
 
@@ -156,9 +179,9 @@ body {
 }
 
 #score-container {
-    font-size: 24px;
+    font-size: 20px; /* Réduit la taille de la police */
     font-weight: bold;
-    margin: 20px;
+    margin: 10px; /* Réduit l'espacement autour du score */
     text-align: center;
 }
 
@@ -168,13 +191,13 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     color: red;
-    font-size: 48px; /* Large but not too big */
+    font-size: 48px;
     font-weight: bold;
-    background-color: rgba(255, 255, 255, 0.8); /* Optional: semi-transparent background */
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 10px;
-    z-index: 10; /* Make sure it appears above other elements */
+    z-index: 10;
     text-align: center;
     width: 80%;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Optional: Add some shadow */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
