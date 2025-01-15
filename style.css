@@ -22,22 +22,22 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 5px; /* Réduit l'espace sous la zone */
+    margin-bottom: 5px;
     background-color: #e8d3a5;
-    padding: 5px; /* Réduit le padding interne */
+    padding: 5px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #next-fruit-text {
-    margin: 0 0 5px 0; /* Réduit la marge entre le texte et le fruit */
-    font-size: 14px; /* Réduit la taille de la police */
+    margin: 0 0 5px 0;
+    font-size: 14px;
     font-weight: bold;
 }
 
 #next-fruit-wrapper {
-    width: 40px; /* Réduit la largeur */
-    height: 40px; /* Réduit la hauteur */
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -141,33 +141,39 @@ body {
     }
 
     #game-and-legend {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: row; /* Dispose le contenu en ligne */
+        align-items: flex-start;
     }
 
     #game-container {
-        width: 90%;
+        width: 80%;
         max-width: 300px;
         min-height: 300px;
+        margin-right: 10px; /* Espacement avec la légende */
     }
 
     #legend {
-        width: 100%;
-        max-width: 300px;
-        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        width: auto; /* Ajuste à la taille des icônes */
+        padding: 5px;
+        height: 100%; /* Prend toute la hauteur du jeu */
+        background-color: #e8d3a5;
     }
 
     #legend h2 {
-        display: none; /* Cache le titre "Fruit Legend" */
+        display: none; /* Cache le titre */
     }
 
-    .legend-item span {
-        display: none; /* Cache les noms des fruits */
+    .legend-item {
+        margin-bottom: 5px;
     }
 
     .legend-fruit {
-        width: 30px;
-        height: 30px;
+        width: 35px; /* Réduit la taille pour les mobiles */
+        height: 35px;
     }
 }
 
@@ -179,9 +185,9 @@ body {
 }
 
 #score-container {
-    font-size: 20px; /* Réduit la taille de la police */
+    font-size: 20px;
     font-weight: bold;
-    margin: 10px; /* Réduit l'espacement autour du score */
+    margin: 10px;
     text-align: center;
 }
 
