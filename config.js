@@ -1,15 +1,13 @@
-// config.js
-
 const fruitTypes = ['eggplant', 'cherry', 'lime', 'banana', 'apple', 'peach', 'coco', 'melon', 'pineapple', 'watermelon'];
-let score = 0;
+let score = 0; // Score global
 let GAME_WIDTH = 800;
 let GAME_HEIGHT = 600;
 let BASE_FRUIT_SIZE = 60;
-const COLLISION_THRESHOLD = 5; // Minimum velocity for fruits to bounce instead of stack
-const FLOOR_HEIGHT_RATIO = 0.95; // Set the floor at 95% of the game container height
-const SIZE_INCREASE_RATIO = 1.3; // Each fruit level is 25% bigger than the previous
-const BASE_FRUIT_WEIGHT = 1; // Base weight for the smallest fruit (cherry)
-const WEIGHT_INCREASE_RATIO = 1.25; // Each fruit level is 25% heavier than the previous
+const COLLISION_THRESHOLD = 5;
+const FLOOR_HEIGHT_RATIO = 0.95;
+const SIZE_INCREASE_RATIO = 1.3;
+const BASE_FRUIT_WEIGHT = 1;
+const WEIGHT_INCREASE_RATIO = 1.25;
 
 function updateGameDimensions(width, height) {
     GAME_WIDTH = width;
